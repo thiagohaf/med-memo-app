@@ -1,29 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:med_memo/components/DateTimePicker.dart';
-import 'package:med_memo/utils/constants.dart';
-
-import 'model/reminder.dart';
-
-import 'package:flutter/material.dart';
-
-class Reminder {
-  final String time;
-  final String medication;
-  final String dosage;
-  bool checked;
-
-  Reminder({
-    required this.time,
-    required this.medication,
-    required this.dosage,
-    this.checked = false,
-  });
-
-  @override
-  String toString() {
-    return 'Reminder(time: $time, medication: $medication, dosage: $dosage, checked: $checked)';
-  }
-}
+import 'package:med_memo/model/reminder.dart';
+import 'package:med_memo/view_model/reminder_view_model.dart';
+import 'package:provider/provider.dart';
 
 class AddReminderScreen extends StatefulWidget {
   @override
@@ -67,6 +45,8 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<AddReminderViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Reminder'),
@@ -151,7 +131,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                       checked: _checked,
                     );
 
-                    print(">>>>> ${reminder}");
+                    viewModel.saveReminder(reminder);
                     // Exibe o resultado ou o salva em algum lugar
                     showDialog(
                       context: context,
