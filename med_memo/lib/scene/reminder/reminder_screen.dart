@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:med_memo/utils/Constants.dart';
 import 'package:med_memo/model/reminder.dart';
+import 'package:med_memo/view_model/reminder_view_model.dart';
+import 'package:provider/provider.dart';
 
 class RemindersScreen extends StatefulWidget {
   const RemindersScreen({super.key});
@@ -10,13 +12,34 @@ class RemindersScreen extends StatefulWidget {
 }
 
 class _RemindersScreenState extends State<RemindersScreen> {
-  // Lista de lembretes com estado (checked ou não)
-  final List<Reminder> _reminders = [
-    Reminder(time: '7:00 AM', medication: 'Carsil 35mg', dosage: '2 tablets', checked: false),
-    Reminder(time: '9:00 AM', medication: 'Roaccutane 30mg', dosage: '1 capsule', checked: false),
-    Reminder(time: '12:00 PM', medication: 'CardioActive 20ml', dosage: '20 drops', checked: false),
-    Reminder(time: '6:00 PM', medication: 'Carsil 35mg', dosage: '2 tablets', checked: false),
-  ];
+  final ReminderViewModel _viewModel = ReminderViewModel();
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadReminders();
+  }
+
+  Future<void> _loadReminders() async {
+    await _viewModel.loadReminders();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _navigateToAddReminder(BuildContext context) async {
+  // final result = await Navigator.pushNamed(context, AppRoutes.addReminder.routeName);
+  final result = await Navigator.pushNamed(context, '/add_reminder');
+
+  if (result == true) {
+    setState(() {
+      // Atualiza a lista de lembretes
+      _loadReminders();
+    });
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,41 +50,40 @@ class _RemindersScreenState extends State<RemindersScreen> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-               Navigator.pushNamed(context, '/add_reminder');
+              Navigator.pushNamed(context, '/add_reminder');
             },
           ),
         ],
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: _reminders.length,
-        itemBuilder: (context, index) {
-          final reminder = _reminders[index];
-          return Dismissible(
-            key: Key(reminder.time + reminder.medication),
-            direction: DismissDirection.endToStart,
-            background: Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              color: Colors.red,
-              child: Icon(Icons.delete, color: Colors.white),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: _viewModel.reminders.length,
+              itemBuilder: (context, index) {
+                final reminder = _viewModel.reminders[index];
+                return Dismissible(
+                  key: Key(reminder.time + reminder.medication),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    color: Colors.red,
+                    child: Icon(Icons.delete, color: Colors.white),
+                  ),
+                  onDismissed: (direction) async {
+                    await _viewModel.deleteReminder(reminder);
+                    setState(() {});
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${reminder.medication} ${Constants.reminderScreenDeleteMessage.label}'),
+                      ),
+                    );
+                  },
+                  child: _buildReminderTile(reminder, index),
+                );
+              },
             ),
-            onDismissed: (direction) {
-              setState(() {
-                _reminders.removeAt(index);
-              });
-
-              // Exibe um snackbar de confirmação
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${reminder.medication} ${Constants.reminderScreenDeleteMessage.label}'),
-                ),
-              );
-            },
-            child: _buildReminderTile(reminder, index),
-          );
-        },
-      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.today), label: 'Today'),
@@ -75,17 +97,13 @@ class _RemindersScreenState extends State<RemindersScreen> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          // Alternar estado do lembrete
           reminder.checked = !reminder.checked;
-
-          // Mover para o final da lista se estiver marcado
           if (reminder.checked) {
-            final completedReminder = _reminders.removeAt(index);
-            _reminders.add(completedReminder);
+            final completedReminder = _viewModel.reminders.removeAt(index);
+            _viewModel.reminders.add(completedReminder);
           } else {
-            // Reordenar para cima caso seja desmarcado
-            final uncompletedReminder = _reminders.removeAt(index);
-            _reminders.insert(0, uncompletedReminder);
+            final uncompletedReminder = _viewModel.reminders.removeAt(index);
+            _viewModel.reminders.insert(0, uncompletedReminder);
           }
         });
       },

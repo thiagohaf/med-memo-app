@@ -45,7 +45,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<AddReminderViewModel>(context);
+    final viewModel = Provider.of<ReminderViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -140,7 +140,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                         content: Text(reminder.toString()),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () => Navigator.of(context).pop(true),
                             child: Text('OK'),
                           ),
                         ],

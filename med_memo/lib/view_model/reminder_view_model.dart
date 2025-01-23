@@ -2,14 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:med_memo/service/reminder_service.dart';
 import '../model/reminder.dart';
 
-class AddReminderViewModel extends ChangeNotifier {
+class ReminderViewModel extends ChangeNotifier {
   final ReminderService _service = ReminderService();
+  List<Reminder> _reminders = [];
 
-  AddReminderViewModel();
+  List<Reminder> get reminders => _reminders;
+
+  ReminderViewModel() {
+    loadReminders();
+  }
+
+  Future<void> loadReminders() async {
+    final fetchedReminders = await _service.getReminders();
+    if (fetchedReminders != null) {
+      _reminders = fetchedReminders;
+      notifyListeners();
+    }
+  }
 
   Future<void> saveReminder(Reminder reminder) async {
-    _service.saveReminder(reminder);
-    notifyListeners();
+    await _service.saveReminder(reminder);
+    await loadReminders(); // Recarrega a lista após salvar
+  }
+
+  Future<void> deleteReminder(Reminder reminder) async {
+    await _service.deleteReminder(reminder);
+    await loadReminders(); // Recarrega a lista após deletar
   }
 
   void clearFields() {

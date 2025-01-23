@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:med_memo/add_reminder_screen.dart';
+import 'package:med_memo/scene/add_reminder/add_reminder_screen.dart';
 import 'package:med_memo/app_routes.dart';
-import 'package:med_memo/introScreen.dart';
-import 'package:med_memo/medication_detail_screen.dart';
-import 'package:med_memo/reminder_screen.dart';
+import 'package:med_memo/scene/intro/introScreen.dart';
+import 'package:med_memo/scene/medication_detail/medication_detail_screen.dart';
+import 'package:med_memo/scene/reminder/reminder_screen.dart';
 import 'package:med_memo/view_model/reminder_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +13,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AddReminderViewModel()),
+        ChangeNotifierProvider(create: (_) => ReminderViewModel()),
       ],
       child: const MyApp(),
     ),
