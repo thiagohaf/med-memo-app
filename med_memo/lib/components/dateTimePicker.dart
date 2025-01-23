@@ -1,107 +1,64 @@
 import 'package:flutter/material.dart';
 
-class DateTimePicker extends StatefulWidget {
-  const DateTimePicker({super.key});
+class DateTimePickerWidget extends StatefulWidget {
+  final Function(DateTime) onDateTimeSelected;
+
+  DateTimePickerWidget({required this.onDateTimeSelected});
 
   @override
-  _DateTimePickerState createState() => _DateTimePickerState();
+  _DateTimePickerWidgetState createState() => _DateTimePickerWidgetState();
 }
 
-class _DateTimePickerState extends State<DateTimePicker> {
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
+class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
+  DateTime? _selectedDateTime;
+  var labelText = 'Date & Time';
+
+  Future<void> _selectDateTime(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDateTime ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate == null) return;
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_selectedDateTime ?? DateTime.now()),
+    );
+
+    if (pickedTime == null) return;
+
+    setState(() {
+      _selectedDateTime = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+
+      labelText = _selectedDateTime.toString();
+    });
+
+    widget.onDateTimeSelected(_selectedDateTime!);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Date & Time Picker'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'Select Date',
-                hintText: _selectedDate != null
-                    ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                    : 'Pick a date',
-                suffixIcon: Icon(Icons.calendar_today),
-              ),
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                );
-                if (pickedDate != null) {
-                  setState(() {
-                    _selectedDate = pickedDate;
-                  });
-                }
-              },
-            ),
-            SizedBox(height: 16),
-            TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'Select Time',
-                hintText: _selectedTime != null
-                    ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                    : 'Pick a time',
-                suffixIcon: Icon(Icons.access_time),
-              ),
-              onTap: () async {
-                TimeOfDay? pickedTime = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.now(),
-                );
-                if (pickedTime != null) {
-                  setState(() {
-                    _selectedTime = pickedTime;
-                  });
-                }
-              },
-            ),
-            SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () {
-                if (_selectedDate != null && _selectedTime != null) {
-                  final selectedDateTime = DateTime(
-                    _selectedDate!.year,
-                    _selectedDate!.month,
-                    _selectedDate!.day,
-                    _selectedTime!.hour,
-                    _selectedTime!.minute,
-                  );
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('Selected Date & Time'),
-                      content: Text(selectedDateTime.toString()),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Please select both date and time')),
-                  );
-                }
-              },
-              child: Text('Confirm Date & Time'),
-            ),
-          ],
+    
+    return GestureDetector(
+      onTap: () => _selectDateTime(context),
+      child: AbsorbPointer(
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: labelText,
+            hintText: _selectedDateTime != null
+                ? '${_selectedDateTime!.day}/${_selectedDateTime!.month}/${_selectedDateTime!.year} ${_selectedDateTime!.hour}:${_selectedDateTime!.minute.toString().padLeft(2, '0')}'
+                : 'Pick date and time',
+            suffixIcon: Icon(Icons.calendar_today),
+          ),
         ),
       ),
     );

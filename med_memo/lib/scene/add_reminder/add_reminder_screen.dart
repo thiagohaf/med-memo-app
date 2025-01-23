@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:med_memo/components/dateTimePicker.dart';
 import 'package:med_memo/model/reminder.dart';
 import 'package:med_memo/view_model/reminder_view_model.dart';
 import 'package:provider/provider.dart';
@@ -15,34 +16,6 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   DateTime? _selectedDateTime;
   bool _checked = false;
 
-  Future<void> _pickDateTime(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-
-      if (pickedTime != null) {
-        setState(() {
-          _selectedDateTime = DateTime(
-            pickedDate.year,
-            pickedDate.month,
-            pickedDate.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ReminderViewModel>(context);
@@ -58,25 +31,12 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: () => _pickDateTime(context),
-                child: AbsorbPointer(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Date & Time',
-                      hintText: _selectedDateTime != null
-                          ? '${_selectedDateTime!.day}/${_selectedDateTime!.month}/${_selectedDateTime!.year} ${_selectedDateTime!.hour.toString().padLeft(2, '0')}:${_selectedDateTime!.minute.toString().padLeft(2, '0')}'
-                          : 'Pick date and time',
-                      suffixIcon: Icon(Icons.calendar_today),
-                    ),
-                    validator: (value) {
-                      if (_selectedDateTime == null) {
-                        return 'Please select a date and time';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
+              DateTimePickerWidget(
+                onDateTimeSelected: (dateTime) {
+                  setState(() {
+                    _selectedDateTime = dateTime;
+                  });
+                },
               ),
               SizedBox(height: 16),
               TextFormField(
@@ -132,7 +92,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                     );
 
                     viewModel.saveReminder(reminder);
-                    // Exibe o resultado ou o salva em algum lugar
+
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
