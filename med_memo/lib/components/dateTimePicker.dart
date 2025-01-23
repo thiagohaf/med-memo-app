@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DateTimePickerWidget extends StatefulWidget {
-  final Function(DateTime) onDateTimeSelected;
+  final Function(String) onDateTimeSelected;
 
   DateTimePickerWidget({required this.onDateTimeSelected});
 
@@ -39,15 +40,14 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
         pickedTime.minute,
       );
 
-      labelText = _selectedDateTime.toString();
+      labelText = DateFormat('dd/MM/yyyy HH:mm:ss').format(_selectedDateTime!);
     });
 
-    widget.onDateTimeSelected(_selectedDateTime!);
+    widget.onDateTimeSelected(labelText);
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return GestureDetector(
       onTap: () => _selectDateTime(context),
       child: AbsorbPointer(
@@ -55,7 +55,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
           decoration: InputDecoration(
             labelText: labelText,
             hintText: _selectedDateTime != null
-                ? '${_selectedDateTime!.day}/${_selectedDateTime!.month}/${_selectedDateTime!.year} ${_selectedDateTime!.hour}:${_selectedDateTime!.minute.toString().padLeft(2, '0')}'
+                ? DateFormat('dd/MM/yyyy HH:mm:ss').format(_selectedDateTime!)
                 : 'Pick date and time',
             suffixIcon: Icon(Icons.calendar_today),
           ),

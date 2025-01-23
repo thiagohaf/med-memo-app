@@ -13,7 +13,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   final _formKey = GlobalKey<FormState>();
   final _medicationController = TextEditingController();
   final _dosageController = TextEditingController();
-  DateTime? _selectedDateTime;
+  String? _selectedDateTime;
   bool _checked = false;
 
   @override
