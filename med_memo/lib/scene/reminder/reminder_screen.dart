@@ -91,14 +91,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                   child: _buildReminderTile(reminder, index),
                 );
               },
-            ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.today), label: 'Today'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Calendar'),
-        ],
-      ),
+            )
     );
   }
 
