@@ -6,13 +6,15 @@ enum Constants {
 
   addReminderScreenTitle('Criar Lembrete'),
   addReminderScreenTime('Horário'),
-  addReminderScreenMedication('Remédio'),
+  addReminderScreenMedication('Medicação'),
   addReminderScreenMedicationHint('Adicione o nome da medicação'),
   addReminderScreenMedicationError('Por favor, adicione o nome da medicação'),
   addReminderScreenDosage('Dosagem'),
   addReminderScreenDosageHint('Adicione a dosagem'),
   addReminderScreenDosageError('Por favor, adicione a dosagem'),
-  addReminderScreenAddButton('Salvar'),
+  addReminderScreenAddButton('Salvar medicação'),
+  addReminderScreenSuccessMessage('Lembrete criado com sucesso!'),
+  addReminderScreenOKButton('OK'),
 
 
   unknown('unknown');
