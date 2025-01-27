@@ -100,7 +100,11 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                         content: Text(reminder.toString()),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Fecha o diálogo
+                              Navigator.of(context).pop(
+                                  true); // Retorna para a tela anterior com valor true
+                            },
                             child: Text('OK'),
                           ),
                         ],

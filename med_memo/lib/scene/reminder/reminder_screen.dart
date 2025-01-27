@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:med_memo/utils/Constants.dart';
 import 'package:med_memo/model/reminder.dart';
 import 'package:med_memo/view_model/reminder_view_model.dart';
-import 'package:provider/provider.dart';
+
+import '../../app_routes.dart';
 
 class RemindersScreen extends StatefulWidget {
   const RemindersScreen({super.key});
@@ -29,17 +30,15 @@ class _RemindersScreenState extends State<RemindersScreen> {
   }
 
   void _navigateToAddReminder(BuildContext context) async {
-  // final result = await Navigator.pushNamed(context, AppRoutes.addReminder.routeName);
-  final result = await Navigator.pushNamed(context, '/add_reminder');
+    final result = await Navigator.pushNamed(context, AppRoutes.addReminder.routeName);
 
-  if (result == true) {
-    setState(() {
-      // Atualiza a lista de lembretes
-      _loadReminders();
-    });
+    if (result == true) {
+      setState(() {
+        // Atualiza a lista de lembretes
+        _loadReminders();
+      });
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,15 @@ class _RemindersScreenState extends State<RemindersScreen> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.pushNamed(context, '/add_reminder');
+              Navigator.pushNamed(context, AppRoutes.addReminder.routeName)
+                  .then((result) {
+                if (result == true) {
+                  // Atualiza a tela reminder após voltar de addReminder
+                  setState(() {
+                    _loadReminders();
+                  });
+                }
+              });
             },
           ),
         ],
@@ -76,7 +83,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
                     setState(() {});
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('${reminder.medication} ${Constants.reminderScreenDeleteMessage.label}'),
+                        content: Text(
+                            '${reminder.medication} ${Constants.reminderScreenDeleteMessage.label}'),
                       ),
                     );
                   },
@@ -87,7 +95,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.today), label: 'Today'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Calendar'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), label: 'Calendar'),
         ],
       ),
     );
@@ -124,7 +133,9 @@ class _RemindersScreenState extends State<RemindersScreen> {
         child: Row(
           children: [
             Icon(
-              reminder.checked ? Icons.check_box : Icons.check_box_outline_blank,
+              reminder.checked
+                  ? Icons.check_box
+                  : Icons.check_box_outline_blank,
               color: reminder.checked ? Colors.lightBlue : null,
             ),
             const SizedBox(width: 16.0),
@@ -137,7 +148,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
-                      decoration: reminder.checked ? TextDecoration.lineThrough : null,
+                      decoration:
+                          reminder.checked ? TextDecoration.lineThrough : null,
                       color: reminder.checked ? Colors.grey : Colors.black,
                     ),
                   ),
@@ -146,7 +158,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
                     '${reminder.time} - ${reminder.dosage}',
                     style: TextStyle(
                       fontSize: 14.0,
-                      decoration: reminder.checked ? TextDecoration.lineThrough : null,
+                      decoration:
+                          reminder.checked ? TextDecoration.lineThrough : null,
                       color: reminder.checked ? Colors.grey : Colors.black,
                     ),
                   ),
