@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:med_memo/components/dateTimePicker.dart';
 import 'package:med_memo/model/reminder.dart';
+import 'package:med_memo/utils/constants.dart';
 import 'package:med_memo/view_model/reminder_view_model.dart';
 import 'package:provider/provider.dart';
 
 class AddReminderScreen extends StatefulWidget {
+  const AddReminderScreen({super.key});
+
   @override
   _AddReminderScreenState createState() => _AddReminderScreenState();
 }
@@ -14,7 +17,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   final _medicationController = TextEditingController();
   final _dosageController = TextEditingController();
   String? _selectedDateTime;
-  bool _checked = false;
+  final bool _checked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Reminder'),
+        title: Text(Constants.addReminderScreenTitle.label),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -42,12 +45,12 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
               TextFormField(
                 controller: _medicationController,
                 decoration: InputDecoration(
-                  labelText: 'Medication',
-                  hintText: 'Enter medication name',
+                  labelText: Constants.addReminderScreenMedication.label,
+                  hintText: Constants.addReminderScreenMedicationHint.label,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter medication';
+                    return Constants.addReminderScreenMedicationError.label;
                   }
                   return null;
                 },
@@ -56,12 +59,12 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
               TextFormField(
                 controller: _dosageController,
                 decoration: InputDecoration(
-                  labelText: 'Dosage',
-                  hintText: 'Enter dosage',
+                  labelText: Constants.addReminderScreenDosage.label,
+                  hintText: Constants.addReminderScreenDosageHint.label,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter dosage';
+                    return Constants.addReminderScreenDosageError.label;
                   }
                   return null;
                 },
@@ -82,8 +85,8 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Reminder Created'),
-                        content: Text(reminder.toString()),
+                        title: Text(Constants.addReminderScreenSuccessMessage.label),
+                        content: Text('O medicamento: ${reminder.medication} \ncom a dosagem ${reminder.dosage} \nfoi adicionado para ${reminder.time}'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -91,14 +94,14 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                               Navigator.of(context).pop(
                                   true); // Retorna para a tela anterior com valor true
                             },
-                            child: Text('OK'),
+                            child: Text(Constants.addReminderScreenOKButton.label),
                           ),
                         ],
                       ),
                     );
                   }
                 },
-                child: Text('Save Reminder'),
+                child: Text(Constants.addReminderScreenAddButton.label),
               ),
             ],
           ),

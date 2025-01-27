@@ -1,7 +1,6 @@
 enum AppRoutes {
   intro,
   reminder,
-  medicationDetail,
   addReminder,
 }
 
@@ -12,8 +11,6 @@ extension AppRoutesExtension on AppRoutes {
         return '/';
       case AppRoutes.reminder:
         return '/reminder';
-      case AppRoutes.medicationDetail:
-        return '/medication_detail';
       case AppRoutes.addReminder:
         return '/add_reminder';
       default:
