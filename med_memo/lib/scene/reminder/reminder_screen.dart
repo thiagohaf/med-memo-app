@@ -63,35 +63,42 @@ class _RemindersScreenState extends State<RemindersScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: _viewModel.reminders.length,
-              itemBuilder: (context, index) {
-                final reminder = _viewModel.reminders[index];
-                return Dismissible(
-                  key: Key(reminder.time + reminder.medication),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    color: Colors.red,
-                    child: Icon(Icons.delete, color: Colors.white),
-                  ),
-                  onDismissed: (direction) async {
-                    await _viewModel.deleteReminder(reminder);
-                    setState(() {});
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            '${reminder.medication} ${Constants.reminderScreenDeleteMessage.label}'),
-                      ),
-                    );
-                  },
-                  child: _buildReminderTile(reminder, index),
-                );
-              },
-            )
+    ? const Center(child: CircularProgressIndicator())
+    : _viewModel.reminders.isEmpty
+        ? Center(
+            child: Text(
+              Constants.reminderScreenEmptyMessage.label,
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+          )
+        : ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: _viewModel.reminders.length,
+            itemBuilder: (context, index) {
+              final reminder = _viewModel.reminders[index];
+              return Dismissible(
+                key: Key(reminder.time + reminder.medication),
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  color: Colors.red,
+                  child: Icon(Icons.delete, color: Colors.white),
+                ),
+                onDismissed: (direction) async {
+                  await _viewModel.deleteReminder(reminder);
+                  setState(() {});
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          '${reminder.medication} ${Constants.reminderScreenDeleteMessage.label}'),
+                    ),
+                  );
+                },
+                child: _buildReminderTile(reminder, index),
+              );
+            },
+          ),
     );
   }
 

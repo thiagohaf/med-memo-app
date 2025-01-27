@@ -3,6 +3,7 @@ enum Constants {
   reminderScreenTitle('Organize sua Rotina de Medicação e Evite Erros Comuns'),
   reminderScreenDescription('Gerencie seus horários de medicação com ferramentas simples, como alarmes ou aplicativos. Estabeleça uma rotina fixa e utilize lembretes visuais para evitar esquecimentos ou doses duplicadas. Assim, você garante o tratamento adequado e a adesão correta.'),
   reminderScreenDeleteMessage('excluído'),
+  reminderScreenEmptyMessage('Não há registros'),
 
   addReminderScreenTitle('Criar Lembrete'),
   addReminderScreenTime('Horário'),
