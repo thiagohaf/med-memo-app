@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:med_memo/add_reminder_screen.dart';
+import 'package:med_memo/scene/add_reminder/add_reminder_screen.dart';
 import 'package:med_memo/app_routes.dart';
-import 'package:med_memo/introScreen.dart';
-import 'package:med_memo/medication_detail_screen.dart';
-import 'package:med_memo/reminder_screen.dart';
+import 'package:med_memo/scene/intro/introScreen.dart';
+import 'package:med_memo/scene/medication_detail/medication_detail_screen.dart';
+import 'package:med_memo/scene/reminder/reminder_screen.dart';
+import 'package:med_memo/view_model/reminder_view_model.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ReminderViewModel()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +32,8 @@ class MyApp extends StatelessWidget {
       routes: {
         AppRoutes.intro.routeName: (context) => IntroScreen(),
         AppRoutes.reminder.routeName: (context) => RemindersScreen(),
-        AppRoutes.medicationDetail.routeName: (context) => MedicationDetailScreen(),
+        AppRoutes.medicationDetail.routeName: (context) =>
+            MedicationDetailScreen(),
         AppRoutes.addReminder.routeName: (context) => AddReminderScreen()
       },
     );

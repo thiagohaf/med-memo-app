@@ -1,3 +1,1 @@
-# med_memo
-
-A new Flutter project.
+# med-memo-app

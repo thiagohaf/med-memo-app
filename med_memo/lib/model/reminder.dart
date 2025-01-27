@@ -1,7 +1,13 @@
+import 'package:isar/isar.dart';
+
+part 'reminder.g.dart';
+
+@collection
 class Reminder {
-  final String time;
-  final String medication;
-  final String dosage;
+  Id id = Isar.autoIncrement;
+  String time;
+  String medication;
+  String dosage;
   bool checked;
 
   Reminder({
