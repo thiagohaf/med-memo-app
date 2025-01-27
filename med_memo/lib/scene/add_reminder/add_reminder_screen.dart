@@ -66,20 +66,6 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Checkbox(
-                    value: _checked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _checked = value!;
-                      });
-                    },
-                  ),
-                  Text('Checked'),
-                ],
-              ),
               SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
