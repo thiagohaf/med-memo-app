@@ -5,7 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 class DateTimePickerWidget extends StatefulWidget {
   final Function(String) onDateTimeSelected;
 
-  DateTimePickerWidget({required this.onDateTimeSelected});
+  const DateTimePickerWidget({super.key, required this.onDateTimeSelected});
 
   @override
   _DateTimePickerWidgetState createState() => _DateTimePickerWidgetState();

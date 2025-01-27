@@ -14,11 +14,9 @@ class ReminderViewModel extends ChangeNotifier {
 
   Future<void> loadReminders() async {
     final fetchedReminders = await _service.getReminders();
-    if (fetchedReminders != null) {
-      _reminders = fetchedReminders;
-      notifyListeners();
+    _reminders = fetchedReminders;
+    notifyListeners();
     }
-  }
 
   Future<void> saveReminder(Reminder reminder) async {
     await _service.saveReminder(reminder);

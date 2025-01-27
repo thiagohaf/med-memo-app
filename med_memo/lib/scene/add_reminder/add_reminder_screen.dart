@@ -6,6 +6,8 @@ import 'package:med_memo/view_model/reminder_view_model.dart';
 import 'package:provider/provider.dart';
 
 class AddReminderScreen extends StatefulWidget {
+  const AddReminderScreen({super.key});
+
   @override
   _AddReminderScreenState createState() => _AddReminderScreenState();
 }
@@ -15,7 +17,7 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   final _medicationController = TextEditingController();
   final _dosageController = TextEditingController();
   String? _selectedDateTime;
-  bool _checked = false;
+  final bool _checked = false;
 
   @override
   Widget build(BuildContext context) {

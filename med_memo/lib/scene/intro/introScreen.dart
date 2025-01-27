@@ -3,6 +3,8 @@ import 'package:med_memo/app_routes.dart';
 import 'package:med_memo/utils/constants.dart';
 
 class IntroScreen extends StatelessWidget {
+  const IntroScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
